@@ -33,7 +33,8 @@ function read_ball_ini_file(path::String, T=Float32; cleanup_keys=true)
     result = BALLIniFile()
 
     open(path) do paramfile
-        params_string = read(paramfile, String)
+        # read whole file and remove potential CR characters (e.g., introduced by git)
+        params_string = replace(read(paramfile, String), '\r' => "")
 
         # filter out comments
         params_string = join(filter(l -> !startswith(strip(l), ";"), split(params_string, "\n")), "\n")
